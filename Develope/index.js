@@ -1,5 +1,8 @@
 const {Shapes, Circle, Triangle, Square} = require("./lib/shapes")
 const inquirer = require("inquirer")
+const color = ("color")
+const fs = require('fs');
+const svgContent = ("Shapes")
 
 const questions = [
     {
@@ -16,29 +19,25 @@ const questions = [
 },
 ]
 
-
-const shape1 = new Triangle()
-const shape2 = new Circle()
-const shape3 = new Square()
-
-
-shape1.setColor(color);
-shape2.setColor(color);
-shape3.setColor(color);
-
 inquirer.prompt(questions).then(answers => {
     console.log(answers)
+});
 
-})
+let newShape;
+switch (Shapes) {
+    case "Circle":
+        newShape = new Circle();
+        break;
+    case "Triangle":
+        newShape = new Triangle();
+        break;
+    case "Square":
+        newShape = new Square();
+        break;
+    default:
+        console.error("You need to pick a shape!");
+        return;
+}
 
-
-
-
-// console.log(myCar)
-// console.log(yourCar)
-
-// yourCar.drive(5)
-
-
-// console.log(yourCar)
+fs.writeFileSync('logo.svg', svgContent);
 
