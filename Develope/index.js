@@ -1,43 +1,75 @@
-const {Shapes, Circle, Triangle, Square} = require("./lib/shapes")
-const inquirer = require("inquirer")
-const color = ("color")
-const fs = require('fs');
-const svgContent = ("Shapes")
+const inquirer = require("inquirer");
+const fs = require("fs");
+const { Triangle, Square, Circle } = require("./lib/shapes");
 
+// Questions array
 const questions = [
     {
-    name:"shapeColor",
-    type:"list",
-    message:"What color do you want",
-    choices:["Green", "Yellow", "Blue", "Red"]
-},
+        type: "list",
+        message: "What shape is your logo?",
+        choices: ["Triangle", "Square", "Circle"],
+        name: "shape",
+    },
     {
-    name:"shape",
-    type:"list",
-    message:"shape do you want",
-    choices:["Circle", "Triangle", "Square"]
-},
+        type: "input",
+        message: "What color is your logo? (Color keyword or hexadecimal number)",
+        name: "shapeColor",
+    },
+    {
+        type: "input",
+        message: "What three letters is the text for your logo?",
+        name: "text",
+    },
+    {
+        type: "input",
+        message: "What color is the text for your logo?",
+        name: "textColor",
+    },
 ]
 
-inquirer.prompt(questions).then(answers => {
-    console.log(answers)
-});
+// Writes the file for the logo
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, err => {
+        if (err) {
+            return console.error(err);
+        } else {
+            console.log("Generated logo.svg");
+        }
+    });
+};
 
-let newShape;
-switch (Shapes) {
-    case "Circle":
-        newShape = new Circle();
-        break;
-    case "Triangle":
-        newShape = new Triangle();
-        break;
-    case "Square":
-        newShape = new Square();
-        break;
-    default:
-        console.error("You need to pick a shape!");
-        return;
+// Takes user input for shape and color
+function userShape(response) {
+    if (response.shape === "Triangle") {
+        let userChoice = new Triangle (response.shapeColor, response.text, response.textColor)
+        return userChoice.render()
+    }
+
+    if (response.shape === "Square") {
+        let userChoice = new Square (response.shapeColor, response.text, response.textColor)
+        return userChoice.render()
+    }
+
+    if (response.shape === "Circle") {
+        let userChoice = new Circle (response.shapeColor, response.text, response.textColor)
+        return userChoice.render()
+    }
+};
+
+// Creates logo in a new file
+function createLogo(response) {
+    const logo = userShape(response);
+    writeToFile("./examples/logo.svg", logo);
 }
 
-fs.writeFileSync('logo.svg', svgContent);
+// Takes input and makes the logo
+function init() {
+    inquirer
+        .prompt(questions)
+        .then((answers) => {
+            console.log("Generating...");
+            createLogo({ ...answers });
+        })
+}
 
+init();
